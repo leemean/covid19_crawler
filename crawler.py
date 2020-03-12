@@ -16,6 +16,7 @@ import pymongo
 from flask import Flask
 from flask import make_response
 from urllib import parse
+import const
 
 headers = {
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36'
@@ -27,10 +28,10 @@ PORT = 8081
 class MongoDBClient:
     def __init__(self):
         # 转义用户名和密码
-        self.user = parse.quote_plus("")
-        self.password = parse.quote_plus("")
+        self.user = parse.quote_plus(const.mongodb_user)
+        self.password = parse.quote_plus(const.mongodb_password)
         # 连接MongoDB
-        self.client = pymongo.MongoClient("".format(self.user,self.password))
+        self.client = pymongo.MongoClient(const.mongodb_url.format(self.user,self.password))
         self.db = self.client['covid19']
         
     def insert(self, collection, data):
@@ -65,7 +66,7 @@ class Crawler:
         self.session.headers.update(headers)
         self.crawl_timestamp = int()
         self.category = ''
-        self.mongodb = MongoDBClient()
+#        self.mongodb = MongoDBClient()
     
     def run(self,category):
         self.crawl_timestamp = int(datetime.datetime.timestamp(datetime.datetime.now())*1000)
@@ -113,7 +114,7 @@ class Crawler:
                                 #str_article = json.dumps(article, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 #                                print(str_article)
                                 #all_articles = all_articles + str(str_article) + '\n'
-                                self.mongodb.insert(collection=mongodb_collection_news,data=article.__dict__)
+#                                self.mongodb.insert(collection=mongodb_collection_news,data=article.__dict__)
                                 all_articles.append(article)
                             else:
                                 continue
